@@ -10,7 +10,7 @@ import { CheckAdminLogin } from "../Utils/CheckAdminLogin";
 export default function Admin() {
 
     const { isLoggedIn, login, logout } = useAdminAuth();
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     
     useEffect(() => {
         async function VerifyLogin() {
@@ -18,6 +18,9 @@ export default function Admin() {
             if (response === true) {
                 //navigate("/admin/login")
                 login();
+            }else{
+                navigate("/admin/login")
+
             }
             console.log(response);
         }

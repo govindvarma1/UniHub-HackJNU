@@ -34,26 +34,27 @@ export default function ProfessorList() {
     }, [])
 
 
-    const [university, setUniversity] = useState([]);
+    const [professor, setProfessor] = useState([]);
     //  const {DisplayUniversities, setDisplayUniversities} = useState([]);
     // const [search, setSearch] = useState("");
-
+    
+    
     useEffect(() => {
         async function GetUniversity() {
             try {
-                const response = await fetch(GetSingleUniversityRoute, {
+                const storedAdmin = JSON.parse(localStorage.getItem("admin"));
+                const response = await fetch(`${GetSingleUniversityRoute}/${storedAdmin.universityId}`, {
                     method: "GET",
+
                   });
                   if (!response.ok) {
                     throw new Error(`API request failed with status: ${response.status}`);
                   }
                   
-                const text = await response.text();
-                console.log("API Response:", text);
 
                 const data = await response.json();
                 console.log("API Response:", data);
-                setUniversity(data);
+                setProfessor(data.university.professors);
             } catch (error) {
                 console.error(error);
 
@@ -76,15 +77,26 @@ export default function ProfessorList() {
                     <main className="px-16 py-8 mt-16">
 
                         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                            {university &&
+                            {/* {university &&
 
                                 <ProfessorCard
 
-                                    university={university}
+                                    professor={professor}
 
                                 />
 
-                            }
+                            } */}
+                             {professor.length >= 0 ? (
+                        <>
+                            {professor.map((professor, ind) => (
+                                <ProfessorCard key={ind} professor={professor} />
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            <p className="text-center">Nothing to show....</p>
+                        </>
+                    )}
                         </div>
                     </main>
 
