@@ -27,7 +27,7 @@ export const getAllPendingProjects=async (req, res, next) => {
         const pendingProjects = await Project.find({
             _id: { $in: university.projects },
             status: 'pending'
-        });
+        }).populate("author readmeFile");
 
         res.status(200).json(pendingProjects);
     } catch (ex) {

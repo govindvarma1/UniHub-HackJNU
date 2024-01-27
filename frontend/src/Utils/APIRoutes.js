@@ -35,15 +35,7 @@ export const AdminTokenVerifyRoute = `${API_ROUTE}/api/auth/verify-token`;
 //Adding Professors
 export const AddProfessorRoute = `${API_ROUTE}/api/admin/add-professor`;
 
-
-
-
-
-
-
-
-
-
+export const GetPendingProjects = `${API_ROUTE}/api/professor/all-pending-projects`
 
 //Single University
 export const GetSingleUniversityRoute =`${API_ROUTE}/api/university/get-university`
