@@ -18,7 +18,12 @@ import { AdminAuthProvider } from './Context/AdminAuthContext'
 import Admin from "./Admin/Admin"
 import AddProfessor from './Admin/AddProfessor'
 import ProfessorList from './Admin/ProfessorList'
+<<<<<<< Updated upstream
 import ProjectList from "./Admin/ProjectsList"
+=======
+import ProfessorDashBoard from './Pages/ProfessorDashBoard'
+import { ProfessorLogin } from './Utils/APIRoutes'
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -52,9 +57,9 @@ function App() {
               <Route path="/admin/professor-list" element={< ProfessorList />} />
               <Route path="/admin/projects" element={< ProjectList />} />
 
-
-
-
+              {/* Proffesor dashboad */}
+              <Route path="/professor/dashboard" element={<ProfessorDashBoard />} />
+              <Route path="/professor/login" element={<ProfessorLogin />} />
 
 
             </Routes>

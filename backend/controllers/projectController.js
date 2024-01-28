@@ -1,8 +1,11 @@
-import Project from "../models/Project.js"
-import Student from "../models/Student.js"
-import Readme from "../models/Readme.js"
-import University from "../models/University.js"
-import axios from "axios"
+import Project from "../models/Project.js";
+import Student from "../models/Student.js";
+import Readme from "../models/Readme.js";
+import University from "../models/University.js";
+import axios from "axios";
+import fetch from "node-fetch";
+
+const NGROCK_URL = "https://a987-34-31-62-73.ngrok-free.app/";
 
 export const uploadProject = async (req, res, next) => {
     try {
@@ -12,14 +15,18 @@ export const uploadProject = async (req, res, next) => {
 
         // Validate the input (add more validation as needed)
         if (!title || !description || !techStack) {
-            return res.status(400).json({ error: 'Title, description, and techStack are required.' });
+            return res
+                .status(400)
+                .json({
+                    error: "Title, description, and techStack are required.",
+                });
         }
 
         // Check if the provided studentId exists in the database
         const student = await Student.findById(studentId);
 
         if (!student) {
-            return res.status(404).json({ error: 'Student not found.' });
+            return res.status(404).json({ error: "Student not found." });
         }
 
         // Create the readme for the project
@@ -27,7 +34,7 @@ export const uploadProject = async (req, res, next) => {
             title,
             description,
             techStack,
-            methodology
+            methodology,
         });
 
         // Create the project with a "pending" status and associate it with the newly created readme
@@ -35,7 +42,7 @@ export const uploadProject = async (req, res, next) => {
             title,
             readmeFile: newReadme._id,
             author: studentId,
-            status: "pending"
+            status: "pending",
         });
 
         // Update the student with the new project
@@ -52,61 +59,68 @@ export const uploadProject = async (req, res, next) => {
 
         const getPlagiarismScore = async (newReadme, newProject) => {
             try {
-                const newReadmeBody = newReadme
-                const plagiarismScore = await axios.post('https://7e4e-34-106-121-214.ngrok-free.app/process_json',
-                    newReadmeBody,
+                const newReadmeBody = newReadme;
+                const plagiarismScore = await fetch(
+                    `${NGROCK_URL}/process_json`,
                     {
-                        "Content-Type": "application/json"
+                        method: "POST",
+                        headers: {
+                            "content-type": "application/json",
+                        },
+                        body: JSON.stringify(newReadmeBody),
                     }
-                )
-                // console.log(plagiarismScore.data)
-                if(plagiarismScore.data.score==0){
-                    newProject.score=0
-                    await newProject.save()
+                );
+                const data = await plagiarismScore.json();
+                console.log(await plagiarismScore.json())
+                console.log(plagiarismScore.data);
+                if (data.score == 0) {
+                    newProject.score = 0;
+                    await newProject.save();
                 }
-                if(plagiarismScore.data.length>0){
-                    newProject.score=plagiarismScore.data[0].score
-                    newProject.plagiarismResults=plagiarismScore.data
-                    await newProject.save()
+                if (data.length > 0) {
+                    newProject.score = plagiarismScore.data[0].score;
+                    newProject.plagiarismResults = plagiarismScore.data;
+                    await newProject.save();
                 }
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
-        }
-        await getPlagiarismScore(newReadme, newProject)
-
+        };
+        await getPlagiarismScore(newReadme, newProject);
 
         res.status(200).json({ project: newProject, readme: newReadme });
     } catch (ex) {
         next(ex);
     }
-}
+};
 
 export const listOfProjects = async (req, res, next) => {
     try {
         // Retrieve the recently approved 20 projects with populated readmeFile, author, and university details
-        const recentlyApprovedProjects = await Project.find({ status: 'approved' })
+        const recentlyApprovedProjects = await Project.find({
+            status: "approved",
+        })
             .sort({ _id: -1 })
             .populate({
-                path: 'readmeFile',
+                path: "readmeFile",
             })
             .populate({
-                path: 'author',
-                model: 'Student',
-                select: 'username university', // Include username and university of the author
+                path: "author",
+                model: "Student",
+                select: "username university", // Include username and university of the author
                 populate: {
-                    path: 'university',
-                    model: 'University',
-                    select: 'name description' // Include name and description of the university
-                }
+                    path: "university",
+                    model: "University",
+                    select: "name description", // Include name and description of the university
+                },
             })
-            .populate('approvedBy')
+            .populate("approvedBy");
 
         res.status(200).json({ recentlyApprovedProjects });
     } catch (ex) {
         next(ex);
     }
-}
+};
 
 export const getSingleProject = async (req, res, next) => {
     try {
@@ -114,22 +128,22 @@ export const getSingleProject = async (req, res, next) => {
 
         // Find the project by ID and populate the related entities
         const project = await Project.findById(projectId)
-            .populate('readmeFile')
-            .populate('approvedBy')
-            .populate('author', 'username gradYear bio') // Include necessary fields from Student model
+            .populate("readmeFile")
+            .populate("approvedBy")
+            .populate("author", "username gradYear bio"); // Include necessary fields from Student model
         // .populate('approvedBy', 'username'); // Assuming Professor model has 'username' field
 
         if (!project) {
-            return res.status(404).json({ error: 'Project not found.' });
+            return res.status(404).json({ error: "Project not found." });
         }
 
         // Check if the project is approved
-        if (project.status !== 'approved') {
-            return res.status(403).json({ error: 'Project is not approved.' });
+        if (project.status !== "approved") {
+            return res.status(403).json({ error: "Project is not approved." });
         }
 
         res.status(200).json({ project });
     } catch (ex) {
         next(ex);
     }
-}
+};
