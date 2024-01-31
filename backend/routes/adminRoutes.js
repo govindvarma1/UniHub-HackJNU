@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.post("/verify-token", verifyToken);
+router.post("/verify-token", auth, verifyToken);
 router.post("/register", adminRegister);
 router.post("/login", AdminLogin);
 router.post("/add-professor", auth, addProfessor);

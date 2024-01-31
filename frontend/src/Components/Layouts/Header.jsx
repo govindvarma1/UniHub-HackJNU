@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {NavLink} from "react-router-dom";
-import { useAuth } from '../../Context/AuthContext';
+import { useAuth } from '../../Context/StudentAuthContext';
 import { CheckLogin } from '../../Utils/CheckLogin';
 import {useNavigate} from "react-router-dom";
 const Header = () => {

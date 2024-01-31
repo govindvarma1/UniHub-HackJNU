@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import Select from "react-select";
 import { GetUniversitiesRoute, StudentRegister } from "../../Utils/APIRoutes";
 import { ConvertList } from "../../Utils/UniversityList";
-import { useAuth } from "../../Context/AuthContext";
+import { useAuth } from "../../Context/StudentAuthContext";
 import { CheckLogin } from "../../Utils/CheckLogin";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";

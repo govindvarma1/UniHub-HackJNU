@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 router.post("/login", professorLogin);
-router.post("/verify-token", verifyToken);
+router.post("/verify-token", auth, verifyToken);
 router.post("/review-project/:projectId", auth, reviewProject);
 router.post("/change-password", auth, changePassword);
 router.get("/all-pending-projects", auth, getAllPendingProjects);

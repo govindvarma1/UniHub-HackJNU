@@ -1,18 +1,18 @@
-import { AdminTokenVerifyRoute } from "./APIRoutes";
+import { ProfessorTokenVerifyRoute } from "./APIRoutes";
 
-export const CheckAdminLogin = async() => {
-  const admin = JSON.parse(localStorage.getItem('admin'));
+export const CheckProfessorLogin = async() => {
+  const professor = JSON.parse(localStorage.getItem('professor'));
   
-  if (!admin || !admin.token) {
+  if (!professor || !professor.token) {
     return false;
   }
 
   try {
-    const response = await fetch(AdminTokenVerifyRoute, {
+    const response = await fetch(ProfessorTokenVerifyRoute, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${admin.token}`,
+        Authorization: `Bearer ${professor.token}`,
       },
     });
 

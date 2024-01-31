@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken"
 
 export const verifyToken = async (req, res, next) => {
     try {
+        console.log(req.user);
         const professorId = req.user.user_id;
         const professor = await Professor.findById(professorId);
         if (!professor) {
@@ -23,7 +24,6 @@ export const professorLogin = async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
-        // Validate the input (add more validation as needed)
         if (!username || !password) {
             return res
                 .status(400)

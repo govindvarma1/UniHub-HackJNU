@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { NavLink } from "react-router-dom";
 import { ProfessorLoginRoute } from "../../Utils/APIRoutes";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { CheckProfessorLogin } from "../../Utils/CheckProfessorLogin";
+import { ProfessoruseAuth } from "../../Context/ProfessorAuthContext";
 
 export default function ProfessorLogin() {
     const naviagate = useNavigate();
+    const { login, IsLoggedIn } = ProfessoruseAuth();
 
-    // useEffect(() => {
-    //   async function VerifyLogin() {
-    //     const response = await CheckLogin();
-    //     if(response === true) {
-    //       login();
-    //       naviagate("/")
-    //     }
-    //     console.log(response);
-    //   }
-    //   VerifyLogin();
-    // }, [])
+    useEffect(() => {
+        async function VerifyLogin() {
+            const response = await CheckProfessorLogin();
+            if (response === true) {
+                login();
+                naviagate("/professor/dashboard");
+            }
+            console.log(response);
+        }
+        VerifyLogin();
+    }, []);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -86,45 +88,47 @@ export default function ProfessorLogin() {
 
     return (
         <>
-            <div className="max-w-md p-8 mx-auto mt-64 bg-white rounded shadow-md">
-                <form onSubmit={handleSubmit}>
-                    <label className="block mb-2">
-                        Username:
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            className="w-full p-2 mt-1 border rounded"
-                        />
-                        <span className="text-xs text-red-500">
-                            {errors.username}
-                        </span>
-                    </label>
-                    <label className="block mb-2">
-                        Password:
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="w-full p-2 mt-1 border rounded"
-                        />
-                        <span className="text-xs text-red-500">
-                            {errors.password}
-                        </span>
-                    </label>
-                    <button
-                        type="submit"
-                        className="w-full p-2 mb-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-                        Login
-                    </button>
-                    <p className="font-semibold text-center">
-                        Don't Have an Account ? Contact Admin
-                    </p>
-                </form>
-                <ToastContainer />
-            </div>
+            {!isLoggedIn && (
+                <div className="max-w-md p-8 mx-auto mt-64 bg-white rounded shadow-md">
+                    <form onSubmit={handleSubmit}>
+                        <label className="block mb-2">
+                            Username:
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleChange}
+                                className="w-full p-2 mt-1 border rounded"
+                            />
+                            <span className="text-xs text-red-500">
+                                {errors.username}
+                            </span>
+                        </label>
+                        <label className="block mb-2">
+                            Password:
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="w-full p-2 mt-1 border rounded"
+                            />
+                            <span className="text-xs text-red-500">
+                                {errors.password}
+                            </span>
+                        </label>
+                        <button
+                            type="submit"
+                            className="w-full p-2 mb-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+                            Login
+                        </button>
+                        <p className="font-semibold text-center">
+                            Don't Have an Account ? Contact Admin
+                        </p>
+                    </form>
+                    <ToastContainer />
+                </div>
+            )}
         </>
     );
 }

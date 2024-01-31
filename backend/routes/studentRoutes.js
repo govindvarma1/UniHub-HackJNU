@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post("/register", StudentRegister);
 router.post("/login", StudentLogin);
-router.post("/verify-token", verifyToken);
+router.post("/verify-token", auth, verifyToken);
 router.get("/all-pending-projects", auth, getPendingProjects);
 router.get("/all-approved-projects", auth, getApprovedProjects);
 router.get("/all-rejected-projects", auth, getRejectedProjects);
