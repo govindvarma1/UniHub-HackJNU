@@ -10,13 +10,13 @@ export default function ProfessorDashBoard() {
     const [pendingProjects, setPendingProjects] = useState([]);
     const [approvedProjects, setApprovedProjects] = useState([]);
     const navigate = useNavigate();
-    // ...
+    
     useEffect(() => {
         async function FetchPendingProjects() {
             const professor = JSON.parse(localStorage.getItem("professor")); // Parse the JSON string
             console.log(professor);
             if (!professor || !professor.token) {
-                toast.error("Please Login");
+                console.log("Please Login");
                 navigate("/professor/login");
                 return;
             }
@@ -48,7 +48,7 @@ export default function ProfessorDashBoard() {
         <div>
             <Header />
             <main className="mt-16">
-                
+                DashBoard
             </main>
             <Footer />
             <ToastContainer />

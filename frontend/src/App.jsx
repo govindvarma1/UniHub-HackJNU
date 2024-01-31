@@ -16,14 +16,11 @@ import AdminLogin from './Admin/AdminLogin'
 import AdminRegistrationForm from "./Admin/AdminRegister"
 import { AdminAuthProvider } from './Context/AdminAuthContext'
 import Admin from "./Admin/Admin"
+import ProfessorLogin from './Components/Auth/ProfessorLogin'
 import AddProfessor from './Admin/AddProfessor'
 import ProfessorList from './Admin/ProfessorList'
-<<<<<<< Updated upstream
 import ProjectList from "./Admin/ProjectsList"
-=======
 import ProfessorDashBoard from './Pages/ProfessorDashBoard'
-import { ProfessorLogin } from './Utils/APIRoutes'
->>>>>>> Stashed changes
 
 function App() {
   return (

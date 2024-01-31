@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { NavLink } from "react-router-dom";
-import { ProfessorLoginRoute, StudentLoginRoute } from "../../Utils/APIRoutes";
+import { ProfessorLoginRoute } from "../../Utils/APIRoutes";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Login() {
+export default function ProfessorLogin() {
     const naviagate = useNavigate();
 
     // useEffect(() => {
@@ -55,7 +55,6 @@ export default function Login() {
             newErrors.password = "Password is required";
             valid = false;
         }
-
         setErrors(newErrors);
         return valid;
     };
@@ -121,10 +120,7 @@ export default function Login() {
                         Login
                     </button>
                     <p className="font-semibold text-center">
-                        Don't Have an Account ?{" "}
-                        <NavLink className="text-blue-700" to="/register">
-                            Register
-                        </NavLink>
+                        Don't Have an Account ? Contact Admin
                     </p>
                 </form>
                 <ToastContainer />

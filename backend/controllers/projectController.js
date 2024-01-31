@@ -2,10 +2,7 @@ import Project from "../models/Project.js";
 import Student from "../models/Student.js";
 import Readme from "../models/Readme.js";
 import University from "../models/University.js";
-import axios from "axios";
 import fetch from "node-fetch";
-
-const NGROCK_URL = "https://a987-34-31-62-73.ngrok-free.app/";
 
 export const uploadProject = async (req, res, next) => {
     try {
@@ -60,8 +57,8 @@ export const uploadProject = async (req, res, next) => {
         const getPlagiarismScore = async (newReadme, newProject) => {
             try {
                 const newReadmeBody = newReadme;
-                const plagiarismScore = await fetch(
-                    `${NGROCK_URL}/process_json`,
+                const plagiarismScoreResponse = await fetch(
+                    `${process.env.PLAG_URL}/process_json`,
                     {
                         method: "POST",
                         headers: {
@@ -70,24 +67,25 @@ export const uploadProject = async (req, res, next) => {
                         body: JSON.stringify(newReadmeBody),
                     }
                 );
-                const data = await plagiarismScore.json();
-                console.log(await plagiarismScore.json())
-                console.log(plagiarismScore.data);
-                if (data.score == 0) {
+                const plagiarismScoreData = await plagiarismScoreResponse.json();
+        
+                if (plagiarismScoreData.score == 0) {
                     newProject.score = 0;
                     await newProject.save();
                 }
-                if (data.length > 0) {
-                    newProject.score = plagiarismScore.data[0].score;
-                    newProject.plagiarismResults = plagiarismScore.data;
+        
+                if (plagiarismScoreData.length > 0) {
+                    newProject.score = plagiarismScoreData[0].score;
+                    newProject.plagiarismResults = plagiarismScoreData;
                     await newProject.save();
                 }
             } catch (error) {
                 console.log(error);
             }
         };
+        
         await getPlagiarismScore(newReadme, newProject);
-
+        
         res.status(200).json({ project: newProject, readme: newReadme });
     } catch (ex) {
         next(ex);

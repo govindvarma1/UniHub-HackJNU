@@ -3,14 +3,11 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-// import universityRoutes from './routes/universityRoutes.js'
-import authRoutes from "./routes/authRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js";
 import professorRoutes from "./routes/professorRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
-import universityRoutes from "./routes/universityRoutes.js"
-import { auth } from "./middleware/auth.js";
+import universityRoutes from "./routes/universityRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -20,9 +17,7 @@ app.use(cors());
 
 //FILE_UPLOADS
 app.use("/file_uploads", express.static("file_uploads"));
-//ROUTES
 
-app.use("/api/auth",authRoutes)
 app.use("/api/admin", adminRoutes);
 app.use("/api/professor", professorRoutes);
 app.use("/api/student", studentRoutes);
