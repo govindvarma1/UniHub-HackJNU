@@ -15,13 +15,13 @@ export const ProfessorAuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <ProfessorAuthContext.Provider value={{ isLoggedIn, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </ProfessorAuthContext.Provider>
   );
 };
 
-export const ProfessoruseAuth = () => {
+export const useProfessorAuth = () => {
   const context = useContext(ProfessorAuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');

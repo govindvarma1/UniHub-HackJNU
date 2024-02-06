@@ -4,11 +4,11 @@ import { ProfessorLoginRoute } from "../../Utils/APIRoutes";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { CheckProfessorLogin } from "../../Utils/CheckProfessorLogin";
-import { ProfessoruseAuth } from "../../Context/ProfessorAuthContext";
+import { useProfessorAuth } from "../../Context/ProfessorAuthContext";
 
 export default function ProfessorLogin() {
     const naviagate = useNavigate();
-    const { login, IsLoggedIn } = ProfessoruseAuth();
+    const { login, IsLoggedIn } = useProfessorAuth();
 
     useEffect(() => {
         async function VerifyLogin() {
@@ -88,7 +88,7 @@ export default function ProfessorLogin() {
 
     return (
         <>
-            {!isLoggedIn && (
+            {!IsLoggedIn && (
                 <div className="max-w-md p-8 mx-auto mt-64 bg-white rounded shadow-md">
                     <form onSubmit={handleSubmit}>
                         <label className="block mb-2">

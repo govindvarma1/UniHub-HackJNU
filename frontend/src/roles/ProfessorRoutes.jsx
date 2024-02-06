@@ -1,16 +1,18 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import ProfessorDashBoard from '../Pages/ProfessorDashBoard';
-import ProfessorLogin from '../Components/Auth/ProfessorLogin';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import ProfessorDashBoard from "../Pages/ProfessorDashBoard";
+import ProfessorLogin from "../Components/Auth/ProfessorLogin";
+import { ProfessorAuthProvider } from "../Context/ProfessorAuthContext";
 
 const ProfessorRoutes = () => {
-  return (
-    <Routes>
-      {/* Proffesor dashboad */}
-      <Route path="/professor/dashboard" element={<ProfessorDashBoard />} />
-      <Route path="/professor/login" element={<ProfessorLogin />} />
-    </Routes>
-  );
+    return (
+        <ProfessorAuthProvider>
+            <Routes>
+                <Route path="/dashboard" element={<ProfessorDashBoard />} />
+                <Route path="/login" element={<ProfessorLogin />} />
+            </Routes>
+        </ProfessorAuthProvider>
+    );
 };
 
 export default ProfessorRoutes;
