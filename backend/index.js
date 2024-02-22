@@ -10,6 +10,7 @@ import projectRoutes from "./routes/projectRoutes.js";
 import universityRoutes from "./routes/universityRoutes.js";
 
 dotenv.config();
+
 const app = express();
 app.use(express.urlencoded({ extended: true, limit: "30mb" }));
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(cors());
 //FILE_UPLOADS
 app.use("/file_uploads", express.static("file_uploads"));
 
+//ROUTES
 app.use("/api/admin", adminRoutes);
 app.use("/api/professor", professorRoutes);
 app.use("/api/student", studentRoutes);

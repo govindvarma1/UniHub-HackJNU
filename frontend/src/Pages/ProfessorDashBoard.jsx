@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function ProfessorDashboard() {
     const [pendingProjects, setPendingProjects] = useState([]);
     const [approvedProjects, setApprovedProjects] = useState([]);
+    const [selectedOption, setSelectedOption] = useState("pending");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,6 +50,7 @@ export default function ProfessorDashboard() {
                 const approvedData = await fetchApprovedProjects();
 
                 setPendingProjects(pendingData);
+                console.log(pendingData);
                 setApprovedProjects(approvedData);
             } catch (error) {
                 console.error(error);
@@ -59,11 +61,48 @@ export default function ProfessorDashboard() {
         fetchData();
     }, [navigate]);
 
+
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
+
+    const displayedProjects = selectedOption === "pending" ? pendingProjects : approvedProjects;
+
     return (
-        <div>
-            Welcome to Professor Dashboard
-            <main className="mt-16">
-                DashBoard
+        <div className="container p-8 mx-auto">
+            <h1 className="mb-8 text-3xl font-bold">Welcome to Professor Dashboard</h1>
+
+            <div className="mb-4">
+                <label className="mr-4">Select Projects:</label>
+                <select
+                    value={selectedOption}
+                    onChange={handleOptionChange}
+                    className="px-4 py-2 text-white bg-blue-500 rounded"
+                >
+                    <option value="pending">Pending Projects</option>
+                    <option value="approved">Approved Projects</option>
+                </select>
+            </div>
+
+            <main className="mt-8">
+                <section className="mb-8">
+                    <h2 className="mb-4 text-xl font-semibold">
+                        {selectedOption === "pending" ? "Pending Projects" : "Approved Projects"}
+                    </h2>
+                    <ul>
+                        {displayedProjects.map((project, ind) => (
+                            <li key={ind} className="flex items-center justify-between mb-2">
+                                <span>{project.title} - {project.author.username}</span>
+                                <button
+                                    className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+                                    onClick={() => navigate(`/professor/project/review/${project._id}`)}
+                                >
+                                    View Details
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
             </main>
             <ToastContainer />
         </div>

@@ -145,3 +145,4 @@ export const getSingleProject = async (req, res, next) => {
         next(ex);
     }
 };
+
