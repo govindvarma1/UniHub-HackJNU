@@ -224,3 +224,28 @@ export const changePassword = async (req, res, next) => {
         next(ex);
     }
 };
+
+export const GetSinglePendingProject = async (req, res, next) => {
+    try {
+        const professorId = req.user.user_id;
+        const projectId = req.params.projectId;
+        console.log(projectId);
+        // Check if the provided professorId exists in the database
+        const professor = await Professor.findById(professorId);
+
+        if (!professor) {
+            return res.status(404).json({ error: "Professor not found." });
+        }
+
+        // Retrieve the university ID from the professor document
+        const project = await Project.findById(projectId);
+
+        if (!project) {
+            return res.status(404).json({ error: "Project not found." });
+        }
+        return res.status(200).json({project: project});
+
+    } catch (ex) {
+        next(ex);
+    }
+}

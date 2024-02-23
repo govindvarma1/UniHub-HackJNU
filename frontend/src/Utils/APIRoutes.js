@@ -15,7 +15,7 @@ export const ProfessorLoginRoute = `${API_ROUTE}/api/professor/login`;
 export const ProfessorRegister = `${API_ROUTE}/api/professor/register`;
 export const GetPendingProjects = `${API_ROUTE}/api/professor/all-pending-projects`;
 export const GetApprovedProjects = `${API_ROUTE}/api/professor/all-approved-projects`;
-export const GetSinglePendingProject = `${API_ROUTE}/api/professor/project/pending-project`;
+export const GetSinglePendingProject = `${API_ROUTE}/api/professor/single-pending-project`;
 
 //Admin Routes
 export const AdminTokenVerifyRoute = `${API_ROUTE}/api/admin/verify-token`; //Student Token Verify

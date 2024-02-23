@@ -11,7 +11,7 @@ const ProfessorRoutes = () => {
             <Routes>
                 <Route path="/dashboard" element={<ProfessorDashBoard />} />
                 <Route path="/login" element={<ProfessorLogin />} />
-                <Route path="/project/review/:ProjectId" element ={<ProjectReview />} />
+                <Route path="/project/review/:projectId" element ={<ProjectReview />} />
             </Routes>
         </ProfessorAuthProvider>
     );

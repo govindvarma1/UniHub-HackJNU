@@ -1,6 +1,7 @@
 import express from "express";
 import { auth } from "../middleware/auth.js";
 import {
+    GetSinglePendingProject,
     changePassword,
     getAllApprovedProjects,
     getAllPendingProjects,
@@ -17,5 +18,6 @@ router.post("/review-project/:projectId", auth, reviewProject);
 router.post("/change-password", auth, changePassword);
 router.get("/all-pending-projects", auth, getAllPendingProjects);
 router.get("/all-approved-projects", auth, getAllApprovedProjects);
+router.post("/single-pending-project/:projectId", auth, GetSinglePendingProject);
 
 export default router;
