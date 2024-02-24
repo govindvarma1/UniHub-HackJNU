@@ -154,7 +154,7 @@ export const reviewProject = async (req, res, next) => {
             project.approvedBy = professorId;
             await project.save();
 
-            if (decision === "approved") {
+            if (decision === "approve") {
                 const updateDatabase = async (projectReadme) => {
                     try {
                         const projectReadmeBody = projectReadme;
@@ -238,7 +238,7 @@ export const GetSinglePendingProject = async (req, res, next) => {
         }
 
         // Retrieve the university ID from the professor document
-        const project = await Project.findById(projectId);
+        const project = await Project.findById(projectId).populate("readmeFile");
 
         if (!project) {
             return res.status(404).json({ error: "Project not found." });

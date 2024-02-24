@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { GetSinglePendingProject } from "../Utils/APIRoutes";
+import { useParams, useNavigate} from "react-router-dom";
+import {
+    GetSinglePendingProject,
+    ProfessorProjectReview,
+} from "../Utils/APIRoutes";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProjectReview = () => {
     const { projectId } = useParams();
-    const [isApproved, setIsApproved] = useState(false);
     const navigate = useNavigate();
     const [project, setProject] = useState(undefined);
 
@@ -15,6 +19,7 @@ const ProjectReview = () => {
                     localStorage.getItem("professor")
                 );
                 if (!professor || !professor.token) {
+                    toast.error("please login");
                     navigate("/professor/login");
                     return;
                 }
@@ -40,57 +45,124 @@ const ProjectReview = () => {
         fetchData();
     }, []);
 
-    const handleApprove = () => {
-        // Implement your logic to handle project approval
-        setIsApproved(true);
-    };
-
-    const handleReject = () => {
-        // Implement your logic to handle project rejection
-        setIsApproved(false);
+    const handleDecision = async (decision) => {
+        try {
+            const professor = await JSON.parse(
+                localStorage.getItem("professor")
+            );
+            if (!professor || !professor.token) {
+                toast.error("please login");
+                navigate("/professor/login");
+                return;
+            }
+            const response = await fetch(
+                `${ProfessorProjectReview}/${projectId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${professor.token}`,
+                        "content-type": "application/json",
+                    },
+                    body: JSON.stringify({ decision: decision }),
+                }
+            );
+            if (response.status == 200) {
+                toast.success("Project verified sucessfully", {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 2000,
+                });
+            } else {
+                console.log(await response.json());
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
         <>
             {project !== undefined && (
-                <div className="max-w-2xl p-8 mx-auto mt-8 bg-white rounded-md shadow-md">
+                <div className="max-w-screen-xl max-h-screen p-8 mx-auto mt-8 overflow-hidden bg-white rounded-md shadow-md">
                     <h2 className="mb-4 text-2xl font-bold">{project.title}</h2>
-                    <p className="mb-4 text-gray-600">{project.description}</p>
 
-                    <div className="p-4 mb-4 overflow-auto border rounded-md max-h-60">
-                        <h3 className="mb-2 text-lg font-bold">
-                            Plagiarism Results:
-                        </h3>
-                        {project.plagiarismResults.map((result, index) => (
-                            <div key={index} className="mb-2">
-                                <p className="text-gray-700">
-                                    {result.heading}
+                    {/* Flex container for sections */}
+                    <div className="flex h-full">
+                        {/* ReadmeFile Section (Left) */}
+                        <div className="w-1/2 max-h-screen pr-4 mb-6 overflow-y-auto">
+                            <div className="max-w-full">
+                                <h3 className="mb-2 text-lg font-bold">
+                                    Project Details:
+                                </h3>
+                                <p className="text-gray-600">
+                                    {project.readmeFile.description}
                                 </p>
-                                <p className="text-gray-500">
-                                    {result.similar_text}
-                                </p>
+
+                                <h3 className="mb-2 text-lg font-bold">
+                                    Tech Stack:
+                                </h3>
+                                <div className="p-2 mb-2 bg-gray-100 rounded-md">
+                                    {project.readmeFile.techStack.map(
+                                        (tech, index) => (
+                                            <span
+                                                key={index}
+                                                className="mr-2 text-gray-700">
+                                                {tech}
+                                            </span>
+                                        )
+                                    )}
+                                </div>
+
+                                <h3 className="mb-2 text-lg font-bold">
+                                    Methodology:
+                                </h3>
+                                <p>{project.readmeFile.methodology}</p>
                             </div>
-                        ))}
+                        </div>
+
+                        {/* Plagiarism Results Section (Right) */}
+                        <div className="w-1/2 max-h-screen pl-4 mb-6 overflow-y-auto">
+                            <div className="max-w-full">
+                                <h3 className="mb-2 text-lg font-bold">
+                                    Plagiarism Results:
+                                </h3>
+                                {project.plagiarismResults.length > 0 ? (
+                                    <ul>
+                                        {project.plagiarismResults.map(
+                                            (result, index) => (
+                                                <li key={index}>
+                                                    <p className="text-gray-700">
+                                                        {result.heading}
+                                                    </p>
+                                                    <p className="text-gray-500">
+                                                        {result.similar_text}
+                                                    </p>
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+                                ) : (
+                                    <p>No plagiarism results available.</p>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="flex justify-between">
+                    {/* Decision Buttons Section */}
+                    <div className="flex justify-center gap-16 mt-4">
                         <button
-                            className={`px-4 py-2 bg-green-500 text-white rounded-md ${
-                                isApproved && "opacity-50 cursor-not-allowed"
-                            }`}
-                            onClick={handleApprove}
-                            disabled={isApproved}>
-                            Approve
-                        </button>
-                        <button
-                            className={`px-4 py-2 bg-red-500 text-white rounded-md ${
-                                isApproved && "opacity-50 cursor-not-allowed"
-                            }`}
-                            onClick={handleReject}
-                            disabled={isApproved}>
+                            className="px-4 py-2 text-white bg-red-500 rounded-md"
+                            onClick={() => handleDecision("rejected")}
+                            >
                             Reject
                         </button>
+                        <button
+                            className="px-4 py-2 text-white bg-green-500 rounded-md"
+                            onClick={() => handleDecision("approved")}
+                            >
+                            Approve
+                        </button>
                     </div>
+                    <ToastContainer />
                 </div>
             )}
         </>

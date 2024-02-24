@@ -107,7 +107,7 @@ export const verifyToken = async (req, res, next) => {
         if (!student) {
             return res.status(404).json({ error: "Student not found." });
         }
-        res.send(200).send("ok");
+        res.status(200).send("ok");
     } catch (ex) {
         next(ex);
     }
