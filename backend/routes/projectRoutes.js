@@ -7,5 +7,6 @@ const router = express.Router()
 
 router.post("/new-project",auth,uploadProject)
 router.get("/feed",listOfProjects)
+router.get("/:projectId", getSingleProject);
 
 export default router
